@@ -67,8 +67,12 @@
 		<fileset dir="${classpath.local.location}" includes="${classpath.local.include}" />
 		<fileset dir="${classpath.libraries.location}" includes="**/*.jar" />
 		<fileset dir="${project.lib}" includes="**/*.jar" />
+		<fileset dir="edsdk4j/lib" includes="**/*.jar" />
 	</path>		
 
+	<path id="edsdk4j.src">
+		<fileset dir="edsdk4j/src" excludes="gettingstarted" />
+	</path>
 	
 
 	<!-- Create the time stamp -->
@@ -113,7 +117,7 @@ ${line}
 		<antcall target="generate.install.library" />
 		<antcall target="generate.web" />
 	  	<antcall target="generate.zip" />	
-	  	<delete dir="${project.tmp}"/>
+<!--HANSI  	  	<delete dir="${project.tmp}"/>-->
 	</target>
 	
 	
@@ -134,11 +138,16 @@ ${line}
   		<copy todir="${sketchbook.location}/${folder}/${project.name}">
   			<fileset dir="${project.tmp}/${project.name}"/>
   		</copy> 
+ 	  	<copy todir="${sketchbook.location}/${folder}/${project.name}/library">
+  			<fileset dir="edsdk4j" includes="EDSDK/**"/>
+  		</copy>
 	</target>
 	
 	
 	<target name="compile">
 		<javac srcdir="${project.tmp}/${project.name}/src" destdir="${project.bin}" source="${java.target.version}" target="${java.target.version}" includeantruntime="false">
+<!--			<include name="edsdk4j/src/**" />
+			<exclude name="edsdk4j/src/gettingstarted/**"/>-->
 			<classpath>
 				<path refid="classpath"/>
 			</classpath>
@@ -156,7 +165,7 @@ ${line}
 	
 	
 	<target name="generate.structure">
-		<delete dir="${project.tmp}" />
+<!--HANSI  		<delete dir="${project.tmp}" />-->
 		<mkdir dir="${project.tmp}" />
 		<mkdir dir="${project.tmp}/${project.name}" />
 	  	<mkdir dir="${project.tmp}/${project.name}/${folder}" />
@@ -170,9 +179,11 @@ ${line}
 	  	</copy>
   		<copy todir="${project.tmp}/${project.name}/src">
   			<fileset dir="${project.src}"/>
+  			<fileset dir="edsdk4j/src" excludes="gettingstarted/**" />
 	  	</copy>
 	  	<copy todir="${project.tmp}/${project.name}/${folder}">
   			<fileset dir="${project.lib}" excludes="README" />
+  			<fileset dir="edsdk4j/lib" />
 	  	</copy>
 	</target>
 	
@@ -213,18 +224,22 @@ ${line}
 		<javadoc bottom="Processing library ${project.name} by ${author.name}. ${library.copyright}" 
 				classpath="${classpath.local.location}/core.jar;{project.bin}" 
 				destdir="${project.tmp}/${project.name}/reference" 
-				verbose="false" 
+				verbose="false"
 				stylesheetfile="resources/stylesheet.css" 
 				doctitle="Javadocs: ${project.name}" 
 				public="true" version="false" 
-				windowtitle="Javadocs: ${project.name}">
- 			
+				windowtitle="Javadocs: ${project.name}"
+					additionalparam="-quiet">
  			<link href="${javadoc.java.href}" />
 			<link href="${javadoc.processing.href}" />
+			<link href="${javadoc.jna.href}" />
 			<taglet name="ExampleTaglet" path="resources/code" />
  			<fileset dir="${project.tmp}/${project.name}/src" defaultexcludes="yes">
 			<!-- add packages to be added to reference. -->
 				<include name="**/*"/>
+			</fileset>
+			<fileset dir="edsdk4j/src">
+				<exclude name="gettingstarted/**"/>
 			</fileset>
 	 	</javadoc>
 	</target>
@@ -319,7 +334,7 @@ ${line}
 			<fileset dir="${project.dist.version}/web" />
 		</move>
 		
-		<delete dir="${project.dist.version}/tmp" />
+<!--HANSI  		<delete dir="${project.dist.version}/tmp" />-->
 	</target>
 	
 	
@@ -367,8 +382,8 @@ ${line}
 	
 	
 	<target name="clean" depends="library.run">
-		<delete dir="${project.bin}"/>
-		<delete dir="${project.tmp}"/>
+<!--HANSI 		<delete dir="${project.bin}"/>-->
+<!--HANSI  		<delete dir="${project.tmp}"/>-->
 		<echo>
 		
 ${line}

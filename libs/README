@@ -1,0 +1,9 @@
+Dependencies required for building only. 
+These are not part of the distribution package. 
+
+
+
+File sources: 
+
+- core.jar, LGPL
+  The processing core java library. 

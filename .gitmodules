@@ -1,0 +1,3 @@
+[submodule "edsdk4j"]
+	path = edsdk4j
+	url = git@github.com:kritzikratzi/edsdk4j.git

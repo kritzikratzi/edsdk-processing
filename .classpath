@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="bin" path="src"/>
+	<classpathentry kind="src" path="edsdk4j/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/processing-core"/>
+	<classpathentry kind="lib" path="libs/core.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/jna.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/jnaerator-0.9.5.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/platform.jar"/>
 	<classpathentry kind="output" path="resources/code"/>
 </classpath>
