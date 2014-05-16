@@ -24,7 +24,6 @@ void draw(){
     text( lastPath + " - " + lastImage.width + " x " + lastImage.height + " px", 10, height-10 ); 
   }
   
-  println( frameRate ); 
   
   // read doesn't do much if liveview is off 
   cam.read(); 
@@ -32,6 +31,10 @@ void draw(){
     PImage live = cam.liveViewImage(); 
     image( live, 0, 0, 400, live.height*400/live.width ); 
   }
+  
+  fill( 255 ); 
+  text( round(frameRate) + "fps", 10, 30 ); 
+ 
 }
 
 void keyPressed(){
@@ -51,7 +54,7 @@ void keyPressed(){
   }
 }
 
-// callback from edsdk 
+// jpeg callback from edsdk 
 public void imageTaken( File file ){
   System.out.println( "Image taken: " + file.getAbsolutePath() ); 
   lastPath = file.getAbsolutePath(); 
@@ -59,3 +62,7 @@ public void imageTaken( File file ){
   System.out.println( lastImage.width + " x " + lastImage.height ); 
 }
 
+// raw callback from edsdk
+public void imageTakenRaw( File file ){
+  System.out.println( "Found raw file: " + file.getAbsolutePath() ); 
+}

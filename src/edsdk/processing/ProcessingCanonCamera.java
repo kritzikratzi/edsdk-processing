@@ -19,16 +19,22 @@ package edsdk.processing;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+
+import com.sun.jna.NativeLong;
+
 import edsdk.api.CanonCamera;
 import edsdk.api.CanonCommand;
-import edsdk.api.CanonCommandListener;
-import edsdk.api.commands.LiveViewCommand;
-import edsdk.api.commands.ShootCommand;
-import edsdk.api.commands.LiveViewCommand.Begin;
+import edsdk.bindings.EdSdkLibrary;
+import edsdk.bindings.EdSdkLibrary.EdsObjectEventHandler;
+import edsdk.bindings.EdSdkLibrary.EdsVoid;
+import edsdk.bindings.EdSdkLibrary.__EdsObject;
+import edsdk.utils.CanonConstants;
 import edsdk.utils.CanonUtils;
 
 /**
@@ -49,9 +55,12 @@ public class ProcessingCanonCamera extends CanonCamera {
 	PApplet parent;
 	PImage liveView; 
 	Method imageTaken;
+	Method imageTakenRaw;
 	boolean liveViewOn; 
 	long lastLiveViewStatusChecked; 
-	
+	SimpleDateFormat dateFormat = new SimpleDateFormat( "YYYY-MM-dd_HH-mm.ss.SSS" ); 
+
+	public File dir; 
 	public final static String VERSION = "##library.prettyVersion##";
 	
 
@@ -65,6 +74,7 @@ public class ProcessingCanonCamera extends CanonCamera {
 	 */
 	public ProcessingCanonCamera(PApplet theParent) {
 		parent = theParent;
+		dir = parent.saveFile( "canon-images" ); 
 		liveView = parent.createImage( 1, 1, PImage.RGB ); 
 		welcome();
 		openSession(); 
@@ -81,8 +91,27 @@ public class ProcessingCanonCamera extends CanonCamera {
 		}
 		catch( Exception e ){
 			System.out.println( "void imageTaken( File file ){} not found. " ); 
-			System.out.println( "Add this method to be notified of file downloads from the camera" ); 
+			System.out.println( "Add this method to be notified of jpeg file downloads from the camera" ); 
 		}
+		
+		try{
+			imageTakenRaw = parent.getClass().getMethod( 
+				"imageTakenRaw", 
+				new Class[]{
+					File.class
+				}
+			); 
+		}
+		catch( Exception e ){
+			System.out.println( "void imageTakenRaw( File file ){} not found. " ); 
+			System.out.println( "Add this method to be notified of raw file downloads from the camera" ); 
+		}
+		
+		setupObjectListener(); 
+	}
+	
+	public File setDirectory( String name ){
+		return dir = parent.saveFile( name ); 
 	}
 	
 	
@@ -93,6 +122,43 @@ public class ProcessingCanonCamera extends CanonCamera {
 			System.getProperty( "java.vendor" ) + 
 			" (" + System.getProperty("sun.arch.data.model") + "bit)"
 		); 
+	}
+	
+	private void setupObjectListener(){
+		this.addObjectEventHandler( new EdsObjectEventHandler(){
+			@Override
+			public NativeLong apply( NativeLong inEvent, __EdsObject inRef, EdsVoid inContext ) {
+				if( inEvent.intValue() == EdSdkLibrary.kEdsObjectEvent_DirItemCreated ){
+					if( !dir.exists() ) dir.mkdirs();
+					
+					File res = CanonUtils.download( inRef, dir, true );
+					String name = res.getName().toLowerCase();
+					try{
+						if( name.endsWith( ".jpg" ) || name.endsWith( ".jpeg" ) ){
+							if( imageTaken != null ){
+								imageTaken.invoke( parent, new Object[]{ res });
+							}
+						}
+						else if( name.endsWith( ".raw" ) || name.endsWith( ".cr2" ) ){
+							if( imageTakenRaw != null ){
+								imageTakenRaw.invoke( parent, new Object[]{ res } );
+							}
+						}
+					}
+					catch( InvocationTargetException e ){
+						e.printStackTrace(); 
+					}
+					catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+					catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				return null;
+			}
+		});
 	}
 	
 	
@@ -179,29 +245,12 @@ public class ProcessingCanonCamera extends CanonCamera {
 	 * 
 	 * @return
 	 */
-	public ShootCommand takeImage(){
+	public void takeImage(){
 		liveViewOn = false; 
-		ShootCommand cmd = shoot(); 
-		cmd.whenDone( new CanonCommandListener<File>() {
-			@Override
-			public void success( File f ){
-				if( imageTaken != null ){
-					try {
-						imageTaken.invoke( parent, new Object[]{
-							f
-						});
-					}
-					catch (Exception e){
-						e.printStackTrace();
-					}
-					
-					checkLiveViewStatus(); 
-				}
-			}
-		});
-		
-		return cmd; 
+		execute( new TakeImageCommand() ); 
 	}
+	
+	
 	
 	/**
 	 * Called by processing when the sketch is disposed
@@ -216,4 +265,31 @@ public class ProcessingCanonCamera extends CanonCamera {
 		closeSession();
 		close(); 
 	}
+	
+	
+
+	public static class TakeImageCommand extends CanonCommand<Void>{
+		private boolean oldEvfMode;
+		
+		public TakeImageCommand(){
+		}
+		
+		@Override
+		public void run() {
+			int result = -1; 
+			oldEvfMode = CanonUtils.isLiveViewEnabled( edsCamera ); 
+			if( oldEvfMode ) CanonUtils.endLiveView( edsCamera );  
+			while( result != EdSdkLibrary.EDS_ERR_OK ){
+				result = sendCommand( EdSdkLibrary.kEdsCameraCommand_TakePicture, 0 ); 
+				try {
+					Thread.sleep( 1000 );
+				}
+				catch( InterruptedException e ){
+					e.printStackTrace();
+				}
+			}
+			if( oldEvfMode ) CanonUtils.beginLiveView( edsCamera ); 
+		}
+	}
+
 }
