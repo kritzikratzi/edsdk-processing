@@ -13,7 +13,18 @@ String lastPath = null;
 void setup(){
   size( 800, 600 ); 
   cam = new ProcessingCanonCamera( this ); 
-  cam.beginLiveView(); 
+  
+  printArray(cam.getAvailableImageQualities()); 
+  cam.setImageQuality( EdsImageQuality.EdsImageQuality_MJN ); 
+  
+  // a background thread will fetch the liveview when it's on 
+  // (you don't need to turn this on/off all the time! )
+  // instead you could also do this manually by calling cam.read()   
+  cam.setAutoUpdateLiveView( true ); 
+
+  // start the liveview
+  cam.beginLiveView();
+
 }
 
 void draw(){
@@ -25,22 +36,20 @@ void draw(){
   }
   
   
-  // read doesn't do much if liveview is off 
-  cam.read(); 
+  // show the live view image
   if( cam.isLiveViewOn() ){
     PImage live = cam.liveViewImage(); 
     image( live, 0, 0, 400, live.height*400/live.width ); 
   }
   
   fill( 255 ); 
-  text( round(frameRate) + "fps", 10, 30 ); 
+  text( frameCount + " "  + round(frameRate) + "fps", 10, 30 ); 
  
 }
 
 void keyPressed(){
   // takeImage is non blocking! 
-  // use File file = cam.takeImage().get() 
-  // to wait for the result (your sketch will look like it's crashing for a few seconds!)
+  // use the callbacks (at the end of this file) to be notified about incoming images. 
   if( key == ' ' ){
     cam.takeImage(); 
   }
@@ -63,6 +72,7 @@ public void imageTaken( File file ){
 }
 
 // raw callback from edsdk
+// only used if enabled using setQuality()
 public void imageTakenRaw( File file ){
   System.out.println( "Found raw file: " + file.getAbsolutePath() ); 
 }

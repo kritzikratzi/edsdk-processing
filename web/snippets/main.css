@@ -1,0 +1,74 @@
+body{
+	background-color: #333; 
+	color: white; 
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	font-size: 12px;
+	margin: 0; 
+	padding: 0;
+	padding-top: 50px;
+}
+
+#header{
+	background-color: black; 
+	position: fixed; 
+	top: 0; 
+	width: 100%;
+	padding: 5px;
+	border-bottom: 1px solid #555;
+}
+
+div.left{
+	float: left; 
+	margin-right: 2em;
+}
+
+h1{
+	margin: 0; 
+	padding: 0; 
+	font-size: 2em;
+	font-weight: normal;
+}
+
+h2{
+	color: #aaa;
+	margin: 0;  
+	padding: 0;
+	font-size: 1.2em;
+	font-weight: normal;
+}
+
+label{
+	display: block;
+	font-size: 0.8em;
+	margin-top: 1em;
+}
+
+input[type="text"]{
+	background-color: black; 
+	color: white; 
+	border-width: 0;
+	border-bottom: 1px solid white; 
+	font-family: "courier new", courier, monospace;
+	width: 250px; 
+}
+
+dl{
+	padding: 5px; 
+}
+
+dt{
+	font-size: 1.5em;
+}
+
+dd{
+	white-space: pre;
+	font-family: "courier new", courier, monospace;
+	font-size: 1em;
+	margin: 0 0 2em 0;
+	color: #ccc;
+}
+
+span.var-cam{
+	color: rgb(214, 255, 127); 
+}
+

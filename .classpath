@@ -4,8 +4,9 @@
 	<classpathentry kind="src" path="edsdk4j/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/core.jar"/>
-	<classpathentry kind="lib" path="edsdk4j/lib/jna.jar"/>
-	<classpathentry kind="lib" path="edsdk4j/lib/jnaerator-0.9.5.jar"/>
-	<classpathentry kind="lib" path="edsdk4j/lib/platform.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/imgscalr-lib-4.2.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/jna-3.4.2.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/jna-platform-3.4.2.jar"/>
+	<classpathentry kind="lib" path="edsdk4j/lib/jnaerator-0.11-shaded.jar"/>
 	<classpathentry kind="output" path="resources/code"/>
 </classpath>

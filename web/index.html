@@ -17,25 +17,24 @@
 <link rel="stylesheet" type="text/css" href="./stylesheet.css">
 </head>
 <body>
-	<div id="container">
+	<div id="header">
+		<h1><img src="cam.png" width="64">##library.name##</h1>
 	
-		<div id="header">
-			<h1>##library.name##</h1>
-		</div>
-		
 		<div id="menu" class="clear">
 			<ul>
 				<li><a href="#about">About</a> \ </li>
 				<li><a href="#download">Download</a> \ </li>
 				<li><a href="#download">Installation</a> \ </li>
 				<li><a href="#examples">Examples</a> \ </li>
+				<li><a href="snippets/index.html">Snippets</a> \ </li>
 				<li><a href="./reference/index.html" target="_blank">Reference</a></li>
 				<!-- <li><a href="#demos">Demos</a> \ </li> -->				
 				<!-- <li><a href="#misc">Misc</a> \ </li> -->
 				<!-- <li><a href="#images">Images</a> \ </li> -->
 			</ul>
 		</div>
-		
+	</div>
+	<div id="container">
 		<div id="content" class="clear">
 			
 			<div id="about">
@@ -47,43 +46,32 @@
 			<p>
 			##library.sentence##<br>
 			##library.paragraph##<br>
-			Feel free to replace this paragraph with a description of the library.<br>
-			Contributed libraries are developed, documented, and maintained by members of the Processing community. Further directions are included with each library. For feedback and support, please post to the Discourse. We strongly encourage all libraries to be open source, but not all of them are.
-			</p>
+			<p>Basic features include: </p>
+			<ul>
+			<li>Taking and downloading pictures</li>
+			<li>Manually adjusting focus</li>
+			<li>Setting apperature, exposure, ISO</li>
+			<li>Accessing live view</li>
+			</ul>
+
+			<h2>Prerequisites (!)</h2>
+			<p>Before you can use this library you need to obtain the EDSDK native library from Canon. You can do so via their developers program: </p>
+			<ul>
+				<li><a href="http://www.didp.canon-europa.com/">Canon Europe</a></li>
+				<li><a href="http://www.usa.canon.com/cusa/consumer/standard_display/sdk_homepage">Canon USA</a></li>
+				<li><a href="http://www.canon-asia.com/personal/web/developerresource">Canon Asia</a></li>
+				<li><a href="https://www.canon.co.nz/en-NZ/Personal/Support-Help/Support-News/Canon-SDK">Canon Oceania</a></li>
+			</ul>
+			<p>Registering is free, but it's manually moderated so expect to wait 1-5 working days until you get access. 
 			</div>
-			
-			
-			
-			<div id="download" class="clear">
-			<h2>Download</h2>
-			<p>
-			Download ##library.name## version ##library.prettyVersion## (##library.version##) in 
-			<a href="./download/##project.name##-##library.version##.zip">.zip format</a>.
-			</p>
-			<h2>Installation</h2>
-			<p>
-			Unzip and put the extracted ##project.name## folder into the libraries folder of your Processing sketches. Reference and examples are included in the ##project.name## folder.
-			</p>
-			</div>	
 			
 			
 			<div id="resources">
+			<h2>Resources</h2>
 			<p><strong>Keywords</strong>. ##library.keywords##</p>
 			<p><strong>Reference</strong>. Have a look at the javadoc reference <a href="./reference/index.html" target="_blank">here</a>. A copy of the reference is included in the .zip as well.</p>		
 			<p><strong>Source</strong>. The source code of ##library.name## is available at <a href="##source.url##">##source.host##</a>, and its repository can be browsed <a href="##source.repository##" target="_blank">here</a>.</p>			
-			</div>
-			
-			
-			<div id="examples" class="clear">
-			<h2>Examples</h2>
-			<p>Find a list of examples in the current distribution of ##library.name##, or have a look at them by following the links below.</p>
-			<ul>
-			##examples##
-			</ul>
-			</div>
-			
-			
-			<div id="info">
+
 			<h2>Tested</h2>
 			<p>
 			<!-- on which platform has the library been tested? -->
@@ -96,6 +84,35 @@
 			<br /><strong>Dependencies</strong> ##library.dependencies##
 			</p>
 			</div>
+			
+			
+			<div id="download" class="clear">
+			<h2>Download</h2>
+			<p>
+			Download ##library.name## version ##library.prettyVersion## (##library.version##) in 
+			<a href="./download/##project.name##-##library.version##.zip">.zip format</a>.
+			</p>
+			<h2>Installation</h2>
+			<p>
+			Unzip and put the extracted ##project.name## folder into the libraries folder of your Processing sketches. Reference and examples are included in the ##project.name## folder.
+			</p>
+			<p>
+			Once you got SDK access drop the EDSDK folder into Documents/Processing/libraries/edsdk-p5/library/. It should look like this: 
+			<br>
+			<a href="path.png"><img src="path.png" width="430" border="0"></a>
+			</p>
+			</div>	
+			
+			
+			<div id="examples" class="clear">
+			<h2>Examples</h2>
+			<p>Find a list of examples in the current distribution of ##library.name##, or have a look at them by following the links below.</p>
+			<p>You might also find the <a href="snippets/index.html">snippets library</a> handy. </p>
+			<ul>
+			##examples##
+			</ul>
+			</div>
+			
 		
 			
 			<!-- use the demos section for a list of applets run in a browser. -->

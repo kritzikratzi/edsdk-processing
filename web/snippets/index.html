@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+	<head>
+		<script src="jquery-1.9.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="main.js" type="text/javascript" charset="utf-8"></script>
+		
+		<link rel="stylesheet" type="text/css" href="main.css">
+	</head>
+	<body>
+		<div id="header">
+			<div class="left">
+				<img src="cam.png" height="45">
+			</div>
+			<div class="left">
+				<h1>edsdk-p5</h1>
+				<h2>Code Snippets</h2>
+			</div>
+			<div class="left">
+				<label for="options">Select Snippet</label>
+				<select id="select-snippet">
+					<option value="-1">Show All</option>
+				</select>
+			</div>
+			<div class="left">
+				<label for="val-cam">Camera Variable Name</label>
+				<input type="text" id="val-cam" value="cam"><br>
+			</div>
+		</div>
+		
+		<dl id="snippets">
+<dt>Initialize Camera</dt>
+<dd>
+import edsdk.bindings.*;
+import edsdk.api.*;
+import edsdk.api.commands.*;
+import edsdk.utils.*;
+import edsdk.processing.*; 
+
+ProcessingCanonCamera {{cam}};
+void setup(){
+	{{cam}} = new ProcessingCanonCamera( this ); 
+}
+</dd>
+
+<dt>Image Quality Options</dt>
+<dd>
+// print available quality settings to the console
+printArray({{cam}}.getAvailableImageQualities()); 
+
+// medium quality, jpeg only
+cam.setImageQuality( CanonUtils.EdsImageQuality.EdsImageQuality_MJN ); 
+
+// small quality, jpeg only
+cam.setImageQuality( CanonUtils.EdsImageQuality.EdsImageQuality_S1JN ); 
+</dd>
+
+<dt>Image Download Options</dt>
+<dd>
+// destination directory for images, relative to sketch path
+{{cam}}.setDirectory( "images" );
+
+// delete images from the sd card after the download? 
+{{cam}}.setDeleteAfterDownload( false );
+
+// more fine grained control:
+{{cam}}.setDeleteJpegAfterDownload( false );
+{{cam}}.setDeleteRawAfterDownload( true );
+</dd>
+
+<dt>Live View</dt>
+<dd>
+void setup(){
+	{{cam}}.setAutoUpdateLiveView( true ); 
+	{{cam}}.beginLiveView();
+}
+
+void draw(){
+	if( {{cam}}.isLiveViewOn() ){
+		PImage live = {{cam}}.liveViewImage(); 
+		image( live, 0, 0, 400, live.height*400/live.width ); 
+	}
+}
+</dd>
+	
+<dt>Take Image</dt>
+<dd>
+PImage lastImage; 
+
+void keyPressed(){
+	if( key == ' ' ){
+		{{cam}}.takeImage(); 
+	}
+}
+
+// callback for jpg
+public void imageTaken( File file ){
+  lastImage = loadImage( file.getAbsolutePath() ); 
+}
+
+// callback for raw
+public void imageTakenRaw( File file ){
+  // you can't load a raw! 
+}
+</dd>
+	
+<dt>ISO</dt>
+<dd>
+// not all ISO will be supported by your camera! 
+{{cam}}.setISOSpeed( EdsISOSpeed.ISO_400 ); 
+{{cam}}.setISOSpeed( EdsISOSpeed.ISO_1000 ); 
+
+// all possible values: 
+ISO_100 ISO_1000 ISO_102400 ISO_12 ISO_125 ISO_1250 ISO_12800 ISO_160 
+ISO_1600 ISO_200 ISO_25 ISO_250 ISO_25600 ISO_320 ISO_3200 ISO_400 
+ISO_50 ISO_500 ISO_51200 ISO_6 ISO_640 ISO_6400 ISO_800 
+</dd>
+	
+<dt>Aperature</dt>
+<dd>
+// not all AV values will be supported by your camera! 
+{{cam}}.setApertureValue( CanonConstants.Av_4_5 ); // set to 4.5
+{{cam}}.setApertureValue( CanonConstants.Av_25 ); // set to 25
+
+// all possible values: 
+Av_1 Av_1_1 Av_1_2 Av_1_2b Av_1_4 Av_1_6 Av_1_8 Av_1_8b Av_2 Av_2_2 
+Av_2_5 Av_2_5b Av_2_8 Av_3_2 Av_3_5 Av_3_5b Av_4 Av_4_5 Av_4_5b 
+Av_5_0 Av_5_6 Av_6_3 Av_6_7 Av_7_1 Av_8 Av_9 Av_9_5 Av_10 Av_11 
+Av_13 Av_13_b Av_14 Av_16 Av_18 Av_19 Av_20 Av_22 Av_25 Av_27 Av_29 
+Av_32 Av_36 Av_38 Av_40 Av_45 Av_51 Av_54 Av_57 Av_64 Av_72 Av_76 
+Av_80 Av_91 
+
+</dd>
+
+<dt>Exposure</dt>
+<dd>
+// not all exposure values will be supported by your camera! 
+{{cam}}.setShutterSpeed( EdsTv.Tv_1by100 ); // set to 1/100
+{{cam}}.setShutterSpeed( EdsTv.Tv_1_3 ); // set to 1.3 seconds
+
+// all possible values: 
+Tv_1by8000 Tv_1by6400 Tv_1by6000 Tv_1by5000 Tv_1by4000 Tv_1by3200 
+Tv_1by3000 Tv_1by2500 Tv_1by2000 Tv_1by1600 Tv_1by1500 Tv_1by1250 
+Tv_1by1000 Tv_1by800 Tv_1by750 Tv_1by640 Tv_1by500 Tv_1by400 Tv_1by350 
+Tv_1by320 Tv_1by250 Tv_1by200 Tv_1by180 Tv_1by160 Tv_1by125 Tv_1by100 
+Tv_1by90 Tv_1by80 Tv_1by60 Tv_1by50 Tv_1by45 Tv_1by40 Tv_1by30 
+Tv_1by25 Tv_1by10 Tv_1by10b Tv_1by8 Tv_1by6 Tv_1by6b Tv_1by5 Tv_1by4 
+Tv_0_3 Tv_0_3b Tv_0_4 Tv_0_5 Tv_0_6 Tv_0_7 Tv_0_8 Tv_1 Tv_1_3 Tv_1_5 
+Tv_1_6 Tv_2 Tv_2_5 Tv_3 Tv_3_2 Tv_4 Tv_5 Tv_6 Tv_6b Tv_8 Tv_10 Tv_10b 
+Tv_13 Tv_15 Tv_20 Tv_20b Tv_25 Tv_30 
+</dd>
+	
+<dt></dt>
+<dd>
+</dd>
+	
+<dt></dt>
+<dd>
+</dd>
+	
+			
+		</dl>
+	</body>
+</html>

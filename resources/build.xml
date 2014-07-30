@@ -8,6 +8,8 @@
 		THIS FILE SHOULD NOT BE EDITED, unless you know what you are doing.
 		If you have recommendations for improvements, please let Elie know 
 		at prisonerjohn@gmail.com
+		
+		Modified by hansi. I know what i'm doing. 
 -->
     
 	
@@ -65,9 +67,10 @@
 
 	<path id="classpath">
 		<fileset dir="${classpath.local.location}" includes="${classpath.local.include}" />
-		<fileset dir="${classpath.libraries.location}" includes="**/*.jar" />
+		<!-- FFS, wtf was the processing team thinking when they did this 
+		<fileset dir="${classpath.libraries.location}" includes="**/*.jar" />-->
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="edsdk4j/lib" includes="**/*.jar" />
+		<fileset dir="edsdk4j/lib" includes="**/*.jar" excludes="jnaerator-0.11-shaded.jar"/>
 	</path>		
 
 	<path id="edsdk4j.src">
@@ -145,6 +148,9 @@ ${line}
 	
 	
 	<target name="compile">
+		<property name="myclasspath" refid="classpath"/>
+		<echo message="Classpath = ${myclasspath}"/>
+		
 		<javac srcdir="${project.tmp}/${project.name}/src" destdir="${project.bin}" source="${java.target.version}" target="${java.target.version}" includeantruntime="false">
 <!--			<include name="edsdk4j/src/**" />
 			<exclude name="edsdk4j/src/gettingstarted/**"/>-->
@@ -178,8 +184,8 @@ ${line}
   			</fileset>
 	  	</copy>
   		<copy todir="${project.tmp}/${project.name}/src">
-  			<fileset dir="${project.src}"/>
-  			<fileset dir="edsdk4j/src" excludes="gettingstarted/**" />
+  			<fileset dir="${project.src}" excludes="probe/**" />
+  			<fileset dir="edsdk4j/src" excludes="gettingstarted/** probe/**" />
 	  	</copy>
 	  	<copy todir="${project.tmp}/${project.name}/${folder}">
   			<fileset dir="${project.lib}" excludes="README" />
@@ -235,12 +241,12 @@ ${line}
 			<link href="${javadoc.jna.href}" />
 			<taglet name="ExampleTaglet" path="resources/code" />
  			<fileset dir="${project.tmp}/${project.name}/src" defaultexcludes="yes">
-			<!-- add packages to be added to reference. -->
 				<include name="**/*"/>
-			</fileset>
-			<fileset dir="edsdk4j/src">
 				<exclude name="gettingstarted/**"/>
 			</fileset>
+			<!--<fileset dir="edsdk4j/src">
+				<exclude name="gettingstarted/**"/>
+			</fileset>-->
 	 	</javadoc>
 	</target>
 	
@@ -254,6 +260,10 @@ ${line}
   	
   		<copy todir="${project.dist.version}/web/examples">
   			<fileset dir="${project.dist.version}/${project.name}/examples" />
+	  	</copy>
+	  	
+  		<copy todir="${project.dist.version}/web/snippets">
+  			<fileset dir="${project.web}/snippets" />
 	  	</copy>
 	  	
 	  	<copy todir="${project.dist.version}/web">
