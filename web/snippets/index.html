@@ -12,14 +12,8 @@
 				<img src="cam.png" height="45">
 			</div>
 			<div class="left">
-				<h1>edsdk-p5</h1>
+				<h1>edsdk-processing</h1>
 				<h2>Code Snippets</h2>
-			</div>
-			<div class="left">
-				<label for="options">Select Snippet</label>
-				<select id="select-snippet">
-					<option value="-1">Show All</option>
-				</select>
 			</div>
 			<div class="left">
 				<label for="val-cam">Camera Variable Name</label>
@@ -30,28 +24,16 @@
 		<dl id="snippets">
 <dt>Initialize Camera</dt>
 <dd>
+// Use these imports instead of what processing suggests! 
 import edsdk.bindings.*;
 import edsdk.api.*;
-import edsdk.api.commands.*;
-import edsdk.utils.*;
 import edsdk.processing.*; 
+import edsdk.utils.CanonConstants.*; 
 
 ProcessingCanonCamera {{cam}};
 void setup(){
 	{{cam}} = new ProcessingCanonCamera( this ); 
 }
-</dd>
-
-<dt>Image Quality Options</dt>
-<dd>
-// print available quality settings to the console
-printArray({{cam}}.getAvailableImageQualities()); 
-
-// medium quality, jpeg only
-cam.setImageQuality( CanonUtils.EdsImageQuality.EdsImageQuality_MJN ); 
-
-// small quality, jpeg only
-cam.setImageQuality( CanonUtils.EdsImageQuality.EdsImageQuality_S1JN ); 
 </dd>
 
 <dt>Image Download Options</dt>
@@ -80,6 +62,12 @@ void draw(){
 		image( live, 0, 0, 400, live.height*400/live.width ); 
 	}
 }
+
+void keyPressed(){
+	if( key == 'e' ){
+		{{cam}}.endLiveView(); 
+	}
+}
 </dd>
 	
 <dt>Take Image</dt>
@@ -105,6 +93,9 @@ public void imageTakenRaw( File file ){
 	
 <dt>ISO</dt>
 <dd>
+// list all iso speeds for your camera
+printArray({{cam}}.getAvailableISOSpeeds() ); 
+
 // not all ISO will be supported by your camera! 
 {{cam}}.setISOSpeed( EdsISOSpeed.ISO_400 ); 
 {{cam}}.setISOSpeed( EdsISOSpeed.ISO_1000 ); 
@@ -117,18 +108,23 @@ ISO_50 ISO_500 ISO_51200 ISO_6 ISO_640 ISO_6400 ISO_800
 	
 <dt>Aperature</dt>
 <dd>
-// not all AV values will be supported by your camera! 
-{{cam}}.setApertureValue( CanonConstants.Av_4_5 ); // set to 4.5
-{{cam}}.setApertureValue( CanonConstants.Av_25 ); // set to 25
+// list all aperature values
+printArray({{cam}}.getAvailableApertureValues()); 
+
+// not all values will be supported by your camera! 
+{{cam}}.setApertureValue( EdsAv.kEdsAv_5_0 ); // set to 5.0
+{{cam}}.setApertureValue( EdsAv.kEdsAv.Av_25 ); // set to 25
 
 // all possible values: 
+// Note: options ending with 'b' represent aperture values when the
+// exposure step set in the Custom Function is 1/3 instead of 1/2.
+// (whatever that could means)
 Av_1 Av_1_1 Av_1_2 Av_1_2b Av_1_4 Av_1_6 Av_1_8 Av_1_8b Av_2 Av_2_2 
 Av_2_5 Av_2_5b Av_2_8 Av_3_2 Av_3_5 Av_3_5b Av_4 Av_4_5 Av_4_5b 
 Av_5_0 Av_5_6 Av_6_3 Av_6_7 Av_7_1 Av_8 Av_9 Av_9_5 Av_10 Av_11 
 Av_13 Av_13_b Av_14 Av_16 Av_18 Av_19 Av_20 Av_22 Av_25 Av_27 Av_29 
 Av_32 Av_36 Av_38 Av_40 Av_45 Av_51 Av_54 Av_57 Av_64 Av_72 Av_76 
 Av_80 Av_91 
-
 </dd>
 
 <dt>Exposure</dt>
@@ -148,7 +144,86 @@ Tv_0_3 Tv_0_3b Tv_0_4 Tv_0_5 Tv_0_6 Tv_0_7 Tv_0_8 Tv_1 Tv_1_3 Tv_1_5
 Tv_1_6 Tv_2 Tv_2_5 Tv_3 Tv_3_2 Tv_4 Tv_5 Tv_6 Tv_6b Tv_8 Tv_10 Tv_10b 
 Tv_13 Tv_15 Tv_20 Tv_20b Tv_25 Tv_30 
 </dd>
-	
+
+<dt>Image Quality Options</dt>
+<dd>
+// print available quality settings to the console
+printArray({{cam}}.getAvailableImageQualities()); 
+
+// medium quality, jpeg only
+{{cam}}.setImageQuality( EdsImageQuality.EdsImageQuality_MJN ); 
+
+// small quality, jpeg only
+{{cam}}.setImageQuality( EdsImageQuality.EdsImageQuality_S1JN ); 
+
+// all possible values: 
+LJ (JPEG Large)
+M1J (JPEG Medium 1)
+M2J (JPEG Medium 2)
+SJ (JPEG Small)
+LJF (JPEG Large Fine)
+LJN (JPEG Large Normal)
+MJF (JPEG Medium Fine)
+MJN (JPEG Medium Normal)
+SJF (JPEG Small Fine)
+SJN (JPEG Small Normal)
+S1JF (JPEG Small 1 Fine)
+S1JN (JPEG Small 1 Normal)
+S2JF (JPEG Small 2)
+S3JF (JPEG Small 3)
+
+LR (RAW)
+LRLJF (RAW + JPEG Large Fine)
+LRLJN (RAW + JPEG Large Normal)
+LRMJF (RAW + JPEG Middle Fine)
+LRMJN (RAW + JPEG Middle Normal)
+LRSJF (RAW + JPEG Small Fine)
+LRSJN (RAW + JPEG Small Normal)
+LRS1JF (RAW + JPEG Small 1 Fine)
+LRS1JN (RAW + JPEG Small 1 Normal)
+LRS2JF (RAW + JPEG Small 2)
+LRS3JF (RAW + JPEG Small 3)
+
+LRLJ (RAW + JPEG Large)
+LRM1J (RAW + JPEG Middle 1)
+LRM2J (RAW + JPEG Middle 2)
+LRSJ (RAW + JPEG Small)
+
+MR (MRAW (SRAW1))
+MRLJF (MRAW (SRAW1) + JPEG Large Fine)
+MRLJN (MRAW (SRAW1) + JPEG Large Normal)
+MRMJF (MRAW (SRAW1) + JPEG Medium Fine)
+MRMJN (MRAW (SRAW1) + JPEG Medium Normal)
+MRSJF (MRAW (SRAW1) + JPEG Small Fine)
+MRSJN (MRAW (SRAW1) + JPEG Small Normal)
+MRS1JF (MRAW (SRAW1) + JPEG Small 1 Fine)
+MRS1JN (MRAW (SRAW1) + JPEG Small 1 Normal)
+MRS2JF (MRAW (SRAW1) + JPEG Small 2)
+MRS3JF (MRAW (SRAW1) + JPEG Small 3)
+
+MRLJ (MRAW (SRAW1) + JPEG Large)
+MRM1J (MRAW (SRAW1) + JPEG Medium 1)
+MRM2J (MRAW (SRAW1) + JPEG Medium 2)
+MRSJ (MRAW (SRAW1) + JPEG Small)
+
+SR (SRAW (SRAW2))
+SRLJF (SRAW (SRAW2) + JPEG Large Fine)
+SRLJN (SRAW (SRAW2) + JPEG Large Normal)
+SRMJF (SRAW (SRAW2) + JPEG Middle Fine)
+SRMJN (SRAW (SRAW2) + JPEG Middle Normal)
+SRSJF (SRAW (SRAW2) + JPEG Small Fine)
+SRSJN (SRAW (SRAW2) + JPEG Small Normal)
+SRS1JF (SRAW (SRAW2) + JPEG Small1 Fine)
+SRS1JN (SRAW (SRAW2) + JPEG Small1 Normal)
+SRS2JF (SRAW (SRAW2) + JPEG Small2)
+SRS3JF (SRAW (SRAW2) + JPEG Small3)
+
+SRLJ (SRAW (SRAW2) + JPEG Large)
+SRM1J (SRAW (SRAW2) + JPEG Medium 1)
+SRM2J (SRAW (SRAW2) + JPEG Medium 2)
+SRSJ (SRAW (SRAW2) + JPEG Small)
+</dd>
+
 <dt></dt>
 <dd>
 </dd>

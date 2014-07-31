@@ -189,7 +189,7 @@ ${line}
 	  	</copy>
 	  	<copy todir="${project.tmp}/${project.name}/${folder}">
   			<fileset dir="${project.lib}" excludes="README" />
-  			<fileset dir="edsdk4j/lib" />
+  			<fileset dir="edsdk4j/lib" excludes="jnaerator*"/>
 	  	</copy>
 	</target>
 	

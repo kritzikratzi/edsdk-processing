@@ -3,14 +3,22 @@
 This library for [Processing](http://www.processing.org) gives you full access to your Canon SLR camera via the EDSDK on Windows. The features include: 
 
 - Taking and downloading pictures
-- Manually adjusting focus
 - Setting apperature, exposure, ISO
 - Accessing live view
 
+------
+**This is the sourcecode of edsdk-processing. If you are just  interested in the library follow these links:**
+
+* Project website
+[http://asdfg.me/up/edsdk-processing](http://asdfg.me/up/edsdk-processing)
+* JavaDoc [http://asdfg.me/up/edsdk-processing/reference/index.html](http://asdfg.me/up/edsdk-processing/reference/index.html)
+* Snippets library [http://asdfg.me/up/edsdk-processing/snippets](http://asdfg.me/up/edsdk-processing/snippets)
+
+------
 
 
 ## Applying for SDK access
-Before you can use this library you need to obtain the EDSDK native library from Canon. You can do so via their developers program: 
+Before doing anything else you need to obtain the EDSDK native library from Canon. You can do so via their developers program: 
 
 - [Canon Europe](http://www.didp.canon-europa.com/)
 - [Canon USA](http://www.usa.canon.com/cusa/consumer/standard_display/sdk_homepage)
@@ -20,26 +28,23 @@ Before you can use this library you need to obtain the EDSDK native library from
 Once you were granted access - this may take a few days - download the latest version of their library and follow the usage instructions. 
 
 
-## Usage instructions 
+## Development setup
 
-1. Make sure you are using the 32bit version of Processing for Windows
-1. Download the edsdk processing library and place it in your libraries folder
-1. Copy the entire `EDSDK/lib` folder to `libraries/edsdk/library`. 
-   You should end up having with the dll in `libraries/edsdk/library/EDSDK/Dlls/EDSDK.dll`
-1. Fire up processing and browse the examples
-
-## Modifying this library
-
-If you want to modify this library or just compile it for yourself you also need to download the `EDSDK`. Place it inside the edsdk4j subproject so that you end up with the dll file in `edsdk-processing/edsdk4j/EDSDK/Dlls/EDSDK.dll`.
-
-Then run `ant` from the command line and watch the magic. 
-
+1. Clone this repository
+1. Pull in the edsdk submodule (run `git submodule foreach git pull`)
+1. Download the EDSDK from Canon
+1. Copy the entire `Windows\EDSDK` into the project. 
+   You should end up having with the dll in `edsdk-processing/EDSDK/Dlls/EDSDK.dll`
+1. Import the project in eclipse
+1. Run the file `src/probe/HansiTest.java`
+1. To export the plugin to processing go to the `resources` folder and run `ant`. 
+1. This project is not much more than a wrapper around edsdk4j. You can find some documentation [here](https://github.com/kritzikratzi/edsdk4j). 
 
 ## License
 
 It's complicated. 
 
-- This library itself is released under the [WTFPL](http://www.wtfpl.net/txt/copying/).
+- This library itself and edsdk4j are released under the [WTFPL](http://www.wtfpl.net/txt/copying/).
 - JNA is dual licensed under the [LGPL2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)/[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 - EDSDK itself is proprietary. If you release a modified version publicly make sure you 
   don't include the EDSDK, as this is (afaik) not permitted by their terms.  
